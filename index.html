@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Teachers Hub — Study Player Pro</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="top-bar-row">
+    <div class="brand">
+      <div class="brand-mark">ETH</div>
+      <div class="brand-text">
+        <h1>Study Player Pro</h1>
+        <span>English Teachers Hub \u00b7 Theni</span>
+      </div>
+    </div>
+    <button class="icon-btn" id="themeBtn" title="Dark mode">&#127769;</button>
+  </div>
+</header>
+
+<main>
+  <div class="search-box">
+    <span>&#128269;</span>
+    <input type="text" id="searchInput" placeholder="Search any lesson...">
+  </div>
+  <div id="searchResults" style="display:none;margin-bottom:10px;"></div>
+
+  <div class="quote-card">
+    <p class="quote-text" id="quoteText">Loading todays quote...</p>
+    <p class="quote-author" id="quoteAuthor"></p>
+  </div>
+
+  <div id="continueSection" style="display:none;">
+    <div class="section-heading">Continue Reading</div>
+    <div class="scroll-row" id="continueRow"></div>
+  </div>
+
+  <div class="section-heading">Browse by Class</div>
+  <div class="class-grid" id="classGrid">
+    <p style="color:var(--ink-soft);font-size:13px;">Loading classes...</p>
+  </div>
+
+  <div id="unitDetail" style="display:none;margin-top:18px;"></div>
+</main>
+
+<footer>T.S. Ramachandran, ELT, GHSS Erasakkanayakanur, Theni District</footer>
+
+<script src="js/app.js"></script>
+</body>
+</html>

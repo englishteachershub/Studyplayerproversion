@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson — English Teachers Hub</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="top-bar-row">
+    <a class="back-link" href="index.html">&#8592; Home</a>
+    <div style="display:flex;gap:8px;">
+      <button class="icon-btn" id="fullscreenBtn" title="Full screen">&#9974;</button>
+      <button class="icon-btn" id="fontBtn" title="Font size">A+</button>
+      <button class="icon-btn" id="themeBtn" title="Dark mode">&#127769;</button>
+    </div>
+  </div>
+  <div class="reading-progress-track"><div class="reading-progress-fill" id="progressFill"></div></div>
+</header>
+
+<main>
+  <div class="lesson-hero">
+    <h2 id="lessonTitle">Loading...</h2>
+    <p id="lessonMeta"></p>
+  </div>
+
+  <div class="player-toolbar">
+    <select id="accentSelect">
+      <option value="indian">&#127470;&#127475; Indian English</option>
+      <option value="british">&#127468;&#127463; British English</option>
+      <option value="american">&#127482;&#127480; American English</option>
+    </select>
+    <span class="ctrl-btn" style="display:flex;align-items:center;gap:6px;">
+      Speed <input type="range" id="speedRange" min="0.5" max="1.5" step="0.1" value="1" style="vertical-align:middle;">
+      <span id="speedVal">1.0x</span>
+    </span>
+  </div>
+
+  <div class="controls-row" style="margin-bottom:6px;">
+    <button class="ctrl-btn" id="btnPause">&#9199; Pause</button>
+    <button class="ctrl-btn" id="btnStop">&#9209; Stop</button>
+    <button class="ctrl-btn" id="btnMeaningToggle">&#128214; Show Meanings: OFF</button>
+    <button class="ctrl-btn" id="btnTranslateToggle">&#127470;&#127475; Tamil Translation: OFF</button>
+    <button class="ctrl-btn" id="btnGlossaryPanel">&#128214; Glossary List</button>
+    <button class="ctrl-btn" id="btnPracticeToggle">&#127908; Reading Practice: OFF</button>
+  </div>
+  <p class="hint-text">&#128161; Tap any word to hear the paragraph read from there. Turn on "Show Meanings" to tap a word for its Tamil meaning instead. Tap a dashed blank to reveal the answer.</p>
+
+  <div class="total-stars-bar" id="totalStarsBar"></div>
+
+  <div class="glossary-panel" id="glossaryPanel">
+    <h3>&#128214; Lesson Glossary</h3>
+    <div id="glossaryList"></div>
+  </div>
+
+  <div id="emptyState" style="display:none;text-align:center;padding:40px 20px;color:var(--ink-soft);">
+    <p style="font-size:15px;">No lesson found for this link.</p>
+    <p style="font-size:13px;">This player loads a lesson via <code>?id=lesson-id</code> in the URL, set by the link on the Home page.</p>
+    <a class="btn btn-navy" href="index.html">Browse Lessons</a>
+  </div>
+
+  <div id="paraContainer"></div>
+</main>
+
+<div id="popupHost" class="word-popup" style="display:none;"></div>
+
+<footer>T.S. Ramachandran, ELT, GHSS Erasakkanayakanur, Theni District</footer>
+
+<script src="js/speech.js"></script>
+<script src="js/glossary.js"></script>
+<script src="js/player.js"></script>
+</body>
+</html>
