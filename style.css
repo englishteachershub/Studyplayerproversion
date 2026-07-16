@@ -1,0 +1,312 @@
+/* ===================================================================
+   English Teachers Hub — Study Player Pro
+   Shared design system. Brand: navy #1B2A4A + gold #C9A227.
+   =================================================================== */
+
+:root{
+  --navy:#1B2A4A;
+  --navy-light:#2C4270;
+  --navy-dark:#101A30;
+  --gold:#C9A227;
+  --gold-light:#E4C55C;
+  --cream:#FBF9F4;
+  --ink:#1F2430;
+  --ink-soft:#5A6072;
+  --line:#E4DFD2;
+  --card:#FFFFFF;
+  --good:#3D8B5F;
+  --bad:#B3261E;
+  --radius-sm:8px;
+  --radius:14px;
+  --radius-lg:20px;
+  --font-display:'Poppins','Segoe UI',sans-serif;
+  --font-body:'Noto Sans','Segoe UI',Arial,sans-serif;
+  --font-lesson:'Noto Serif','Georgia',serif;
+  --font-tamil:'Noto Sans Tamil','Latha',sans-serif;
+}
+[data-theme="dark"]{
+  --cream:#12161F;
+  --ink:#EDEBE3;
+  --ink-soft:#A9AEC0;
+  --line:#2A3140;
+  --card:#1A202C;
+  --navy-light:#3A5484;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--font-body);
+  -webkit-font-smoothing:antialiased;
+  transition:background .3s ease, color .3s ease;
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+img{max-width:100%;}
+
+/* ---------- Top bar (shared) ---------- */
+.top-bar{
+  background:var(--navy);
+  color:#fff;
+  padding:14px 16px;
+  position:sticky;
+  top:0;
+  z-index:30;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+}
+.top-bar-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  max-width:900px;
+  margin:0 auto;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:var(--navy);font-size:14px;
+  flex:none;
+  font-family:var(--font-display);
+}
+.brand-text h1{font-size:15px;margin:0;font-weight:700;letter-spacing:.02em;font-family:var(--font-display);}
+.brand-text span{font-size:11px;color:var(--gold-light);}
+.icon-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  width:38px;height:38px;
+  border-radius:10px;
+  font-size:16px;
+  display:flex;align-items:center;justify-content:center;
+}
+.icon-btn:active{transform:scale(.94);}
+.back-link{
+  display:flex;align-items:center;gap:6px;
+  color:#fff;font-size:13px;font-weight:600;
+  opacity:.9;
+}
+
+main{max-width:900px;margin:0 auto;padding:16px;}
+
+/* ---------- Buttons ---------- */
+.btn{
+  border:none;border-radius:20px;
+  padding:9px 16px;font-size:13px;font-weight:700;
+  display:inline-flex;align-items:center;gap:6px;
+}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--navy-dark);}
+.btn-outline{background:var(--card);border:1px solid var(--line);color:var(--navy);}
+[data-theme="dark"] .btn-outline{color:var(--gold-light);}
+.btn:active{transform:scale(.97);}
+
+/* ---------- Home: search + quote ---------- */
+.search-box{
+  display:flex;align-items:center;gap:8px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:24px;padding:10px 16px;margin:14px 0;
+}
+.search-box input{
+  border:none;outline:none;background:none;
+  font-size:14px;color:var(--ink);width:100%;
+  font-family:var(--font-body);
+}
+
+.quote-card{
+  background:linear-gradient(135deg,var(--navy),var(--navy-light));
+  color:#fff;border-radius:var(--radius-lg);
+  padding:18px 20px;margin-bottom:18px;
+  position:relative;overflow:hidden;
+}
+.quote-card::before{
+  content:"\201C";
+  position:absolute;top:-18px;right:10px;
+  font-size:100px;color:rgba(255,255,255,.08);
+  font-family:Georgia,serif;
+}
+.quote-card p.quote-text{font-size:15px;line-height:1.6;margin:0 0 6px;font-style:italic;position:relative;}
+.quote-card p.quote-author{font-size:12px;color:var(--gold-light);margin:0;position:relative;}
+
+/* ---------- Continue reading strip ---------- */
+.section-heading{
+  font-family:var(--font-display);
+  font-size:14px;font-weight:700;color:var(--navy);
+  text-transform:uppercase;letter-spacing:.06em;
+  margin:22px 0 10px;
+}
+[data-theme="dark"] .section-heading{color:var(--gold-light);}
+
+.scroll-row{
+  display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;
+  scroll-snap-type:x proximity;
+}
+.continue-card{
+  flex:none;width:210px;scroll-snap-align:start;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:12px 14px;
+}
+.continue-card .cc-title{font-weight:700;font-size:13.5px;color:var(--navy);margin-bottom:4px;}
+[data-theme="dark"] .continue-card .cc-title{color:var(--gold-light);}
+.continue-card .cc-meta{font-size:11px;color:var(--ink-soft);margin-bottom:8px;}
+.progress-track{height:5px;background:var(--line);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gold);}
+
+/* ---------- Class cards (bookshelf motif: colored spine per grade) ---------- */
+.class-grid{display:flex;flex-direction:column;gap:12px;}
+.class-card{
+  display:flex;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;
+}
+.class-spine{
+  width:10px;flex:none;
+}
+.class-body{padding:14px 16px;flex:1;}
+.class-body h3{margin:0 0 2px;font-size:16px;color:var(--navy);font-family:var(--font-display);}
+[data-theme="dark"] .class-body h3{color:var(--gold-light);}
+.class-body p{margin:0 0 10px;font-size:12px;color:var(--ink-soft);}
+.unit-chip-row{display:flex;gap:6px;flex-wrap:wrap;}
+.unit-chip{
+  font-size:11.5px;font-weight:600;
+  background:var(--cream);border:1px solid var(--line);
+  border-radius:14px;padding:5px 10px;
+}
+.unit-chip.available{background:var(--navy);color:#fff;border-color:var(--navy);}
+.unit-chip.soon{color:var(--ink-soft);}
+
+/* ---------- Unit detail panel ---------- */
+.type-grid{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
+.type-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:10px 14px;
+}
+.type-row .tr-label{font-size:13.5px;font-weight:600;}
+.type-row .tr-title{font-size:11.5px;color:var(--ink-soft);}
+.type-row.soon{opacity:.55;}
+
+footer{
+  text-align:center;font-size:11px;color:var(--ink-soft);
+  padding:26px 14px 14px;
+}
+
+/* ---------- Lesson player ---------- */
+.lesson-font{font-family:var(--font-lesson);line-height:1.9;}
+.dyslexia-font, .dyslexia-font .lesson-font{
+  font-family:'Comic Sans MS','Trebuchet MS',sans-serif !important;
+  letter-spacing:.02em;
+}
+.lesson-hero{text-align:center;margin:6px 0 4px;}
+.lesson-hero h2{margin:0;font-size:20px;color:var(--navy);font-family:var(--font-display);}
+[data-theme="dark"] .lesson-hero h2{color:var(--gold-light);}
+.lesson-hero p{margin:2px 0 0;font-size:12px;color:var(--ink-soft);}
+
+.reading-progress-track{
+  height:4px;background:var(--line);border-radius:2px;
+  margin:12px 0;overflow:hidden;position:sticky;top:0;
+}
+.reading-progress-fill{height:100%;background:var(--gold);width:0%;transition:width .2s linear;}
+
+.player-toolbar{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;
+}
+.player-toolbar select{
+  background:var(--card);color:var(--ink);
+  border:1px solid var(--line);border-radius:8px;
+  padding:7px 9px;font-size:12.5px;
+}
+.ctrl-btn{
+  display:flex;align-items:center;gap:6px;
+  background:var(--cream);border:1px solid var(--line);color:var(--navy);
+  padding:7px 12px;border-radius:20px;font-size:12.5px;font-weight:600;
+}
+[data-theme="dark"] .ctrl-btn{color:var(--gold-light);}
+.ctrl-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.ctrl-btn.listening{background:var(--bad);color:#fff;border-color:var(--bad);}
+.ctrl-btn:active{transform:scale(.96);}
+
+.hint-text{font-size:12px;color:var(--ink-soft);margin:8px 0 16px;}
+
+.total-stars-bar{
+  display:none;text-align:center;font-weight:700;color:var(--navy);
+  background:#fdf7e6;border:1px solid var(--gold);border-radius:12px;
+  padding:9px;margin-bottom:14px;font-size:13.5px;
+}
+[data-theme="dark"] .total-stars-bar{color:var(--gold-light);background:rgba(201,162,39,.12);}
+.total-stars-bar.visible{display:block;}
+
+.glossary-panel{
+  display:none;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px;margin-bottom:16px;
+}
+.glossary-panel.visible{display:block;}
+.glossary-panel h3{margin:0 0 10px;color:var(--navy);font-size:15px;font-family:var(--font-display);}
+[data-theme="dark"] .glossary-panel h3{color:var(--gold-light);}
+.glossary-row{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;
+}
+.glossary-row:last-child{border-bottom:none;}
+.glossary-row .gw{font-weight:700;color:var(--navy);min-width:88px;}
+[data-theme="dark"] .glossary-row .gw{color:var(--gold-light);}
+.glossary-row .ge{color:var(--ink-soft);flex:1;}
+.glossary-row .gt{color:#8a6d00;flex:1;text-align:right;font-family:var(--font-tamil);}
+[data-theme="dark"] .glossary-row .gt{color:var(--gold-light);}
+
+.paragraph-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px;margin-bottom:16px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.para-num{
+  font-size:11px;font-weight:700;color:var(--gold);
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;
+}
+.para-text{font-size:17.5px;color:var(--ink);}
+.para-text .word{cursor:pointer;border-radius:3px;padding:0 1px;}
+.para-text .word:active{background:rgba(201,162,39,.25);}
+.para-text .word.speaking{background:var(--gold);color:#1F2430;}
+.para-text .word.read-correct{background:#d9f0dc;color:#1f6b3a;}
+.para-text .word.read-incorrect{background:#fbe1e1;color:#a13a3a;}
+.para-text .word.blank{
+  color:transparent;
+  border-bottom:2px dashed var(--gold);
+  cursor:pointer;
+  user-select:none;
+}
+.para-text .word.blank.revealed{
+  color:inherit;
+  border-bottom:2px solid var(--good);
+}
+
+.translation-box{
+  display:none;margin:12px 0 0;padding:10px 14px;
+  background:#fdf7e6;border-left:3px solid var(--gold);border-radius:6px;
+  font-size:15px;line-height:1.9;font-family:var(--font-tamil);color:var(--navy);
+}
+[data-theme="dark"] .translation-box{background:rgba(201,162,39,.1);color:var(--gold-light);}
+.translation-box.visible{display:block;}
+
+.controls-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+
+.practice-row{margin-top:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.star-line{font-size:1.1rem;letter-spacing:2px;}
+.star-line .star-msg{display:block;font-size:.72rem;letter-spacing:0;color:var(--ink-soft);}
+
+.word-popup{
+  position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+  background:var(--navy);color:#fff;border-radius:12px;padding:12px 16px;
+  max-width:90%;box-shadow:0 6px 24px rgba(0,0,0,.3);z-index:50;font-size:14px;
+}
+.word-popup b{color:var(--gold-light);font-size:16px;}
+.word-popup .tamil{color:var(--gold-light);display:block;margin-top:3px;font-family:var(--font-tamil);}
+.word-popup .close{position:absolute;top:6px;right:9px;cursor:pointer;opacity:.7;font-size:13px;}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important;}
+}

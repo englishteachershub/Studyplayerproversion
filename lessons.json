@@ -1,0 +1,13 @@
+{
+  "lessons": [
+    {
+      "id": "class8-unit1-prose-nosejewel",
+      "class": "8",
+      "unit": "1",
+      "type": "prose",
+      "title": "The Nose-Jewel",
+      "path": "lessons/class8/nosejewel.json",
+      "status": "available"
+    }
+  ]
+}

@@ -1,0 +1,641 @@
+{
+  "types": {
+    "prose": "Prose",
+    "poem": "Poem",
+    "supplementary": "Supplementary",
+    "grammar": "Grammar"
+  },
+  "classes": [
+    {
+      "class": "6",
+      "label": "Class 6",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "class": "7",
+      "label": "Class 7",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "class": "8",
+      "label": "Class 8",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "The Nose-Jewel",
+              "status": "available",
+              "lessonId": "class8-unit1-prose-nosejewel"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "class": "9",
+      "label": "Class 9",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "class": "10",
+      "label": "Class 10",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "class": "11",
+      "label": "Class 11",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "class": "12",
+      "label": "Class 12",
+      "units": [
+        {
+          "unit": "1",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "2",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "3",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        },
+        {
+          "unit": "4",
+          "types": {
+            "prose": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "poem": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "supplementary": {
+              "title": "Coming soon",
+              "status": "soon"
+            },
+            "grammar": {
+              "title": "Coming soon",
+              "status": "soon"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
