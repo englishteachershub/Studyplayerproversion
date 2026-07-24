@@ -17,6 +17,8 @@
   var fontStep = 1;
   var readingStars = {};
   var accentMap = { indian:'en-IN', british:'en-GB', american:'en-US' };
+  var activeParaIdx = 0;
+  var isPaused = false;
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -28,7 +30,6 @@
       container: qs('paraContainer'), empty: qs('emptyState'),
       progressFill: qs('progressFill'),
       accentSelect: qs('accentSelect'), speedRange: qs('speedRange'), speedVal: qs('speedVal'),
-      btnPlay: qs('btnPlay'), btnPause: qs('btnPause'), btnStop: qs('btnStop'),
       btnMeaning: qs('btnMeaningToggle'), btnTranslate: qs('btnTranslateToggle'),
       btnGlossaryPanel: qs('btnGlossaryPanel'), glossaryPanel: qs('glossaryPanel'), glossaryList: qs('glossaryList'),
       btnPractice: qs('btnPracticeToggle'), totalStarsBar: qs('totalStarsBar'),
@@ -46,10 +47,23 @@
     els.speedRange.addEventListener('input', function(){
       els.speedVal.textContent = parseFloat(els.speedRange.value).toFixed(1) + 'x';
     });
-    els.btnStop.addEventListener('click', function(){ window.ETHSpeech.stop(); });
-    els.btnPause.addEventListener('click', function(){ window.ETHSpeech.pause(); });
     els.popup.addEventListener('click', function(e){
       if (e.target.dataset.closePopup) window.ETHGlossary.hidePopup();
+    });
+
+    els.bottomPlay = qs('bottomPlay');
+    els.bottomPause = qs('bottomPause');
+    els.bottomStop = qs('bottomStop');
+    els.bottomMic = qs('bottomMic');
+    els.bottomPlay.addEventListener('click', function(){ playParagraph(activeParaIdx, currentRate()); });
+    els.bottomPause.addEventListener('click', togglePauseResume);
+    els.bottomStop.addEventListener('click', function(){
+      window.ETHSpeech.stop();
+      isPaused = false;
+    });
+    els.bottomMic.addEventListener('click', function(){
+      var btn = document.querySelector('.mic-btn[data-idx="' + activeParaIdx + '"]');
+      if (btn) btn.click();
     });
 
     window.addEventListener('scroll', throttledSaveProgress);
@@ -164,6 +178,8 @@
   function currentAccent(){ return accentMap[els.accentSelect.value] || 'en-IN'; }
 
   function playParagraph(idx, rate){
+    activeParaIdx = idx;
+    isPaused = false;
     var paraEl = qs('para-' + idx);
     window.ETHSpeech.speakParagraph(paraEl, rate, currentAccent());
   }
@@ -171,7 +187,14 @@
   function speakFromWord(wordEl){
     // Read aloud starting from the exact word tapped, not the start of the paragraph.
     var paraEl = wordEl.closest('.para-text');
+    activeParaIdx = parseInt(paraEl.dataset.idx, 10);
+    isPaused = false;
     window.ETHSpeech.speakFromWord(paraEl, wordEl, currentRate(), currentAccent());
+  }
+
+  function togglePauseResume(){
+    if (isPaused){ window.ETHSpeech.resume(); isPaused = false; els.bottomPause.textContent = '\u23F8'; }
+    else { window.ETHSpeech.pause(); isPaused = true; els.bottomPause.textContent = '\u25B6\uFE0F'; }
   }
 
   /* ---------- Toggles ---------- */
@@ -209,6 +232,7 @@
       row.style.display = practiceMode ? 'flex' : 'none';
     });
     if (practiceMode) attachPracticeEvents();
+    els.bottomMic.style.display = practiceMode ? 'flex' : 'none';
     updateTotalStarsBar();
   }
 
@@ -216,7 +240,13 @@
     document.querySelectorAll('.mic-btn').forEach(function(b){
       if (b.dataset.bound) return;
       b.dataset.bound = '1';
-      b.addEventListener('click', function(){ startReadAlong(parseInt(b.dataset.idx, 10), b); });
+      b.addEventListener('click', function(){
+        if (b.dataset.listening === '1' && activeRecognition){
+          activeRecognition.stop();
+          return;
+        }
+        startReadAlong(parseInt(b.dataset.idx, 10), b);
+      });
     });
   }
 
@@ -227,28 +257,41 @@
     return filled + empty + '<span class="star-msg">' + message + '</span>';
   }
 
+  var activeRecognition = null;
+
   function startReadAlong(idx, btn){
+    activeParaIdx = idx;
     var paraEl = qs('para-' + idx);
     btn.classList.add('listening');
-    btn.textContent = '\uD83C\uDFA4 Listening...';
-    btn.disabled = true;
+    btn.textContent = '\u23F9 Stop Listening';
+    btn.dataset.listening = '1';
+    els.bottomMic.classList.add('listening');
 
-    window.ETHSpeech.startReadAlong(paraEl,
-      function onResult(result){
-        readingStars[idx] = Math.max(readingStars[idx] || 0, result.stars);
-        qs('star-line-' + idx).innerHTML = starLineHtml(result.stars, result.correctCount + ' of ' + result.total + ' words read correctly');
-        updateTotalStarsBar();
-        saveStars(idx, readingStars[idx]);
+    activeRecognition = window.ETHSpeech.startReadAlong(paraEl,
+      function onProgress(progress){
+        qs('star-line-' + idx).innerHTML =
+          starProgressHtml(progress.correctCount, progress.total);
       },
       function onError(msg){
         qs('star-line-' + idx).innerHTML = '<span class="star-msg" style="color:var(--bad);">' + msg + '</span>';
       },
-      function onEnd(){
+      function onEnd(result){
+        readingStars[idx] = Math.max(readingStars[idx] || 0, result.stars);
+        qs('star-line-' + idx).innerHTML = starLineHtml(result.stars, result.correctCount + ' of ' + result.total + ' words read correctly');
+        updateTotalStarsBar();
+        saveStars(idx, readingStars[idx]);
         btn.classList.remove('listening');
         btn.textContent = '\uD83C\uDFA4 Read This Paragraph';
-        btn.disabled = false;
+        btn.dataset.listening = '';
+        els.bottomMic.classList.remove('listening');
+        activeRecognition = null;
       }
     );
+  }
+
+  function starProgressHtml(correct, total){
+    var pct = total ? Math.round((correct / total) * 100) : 0;
+    return '<span class="star-msg">Listening\u2026 ' + correct + ' of ' + total + ' words (' + pct + '%)</span>';
   }
 
   function updateTotalStarsBar(){

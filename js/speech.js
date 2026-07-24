@@ -34,6 +34,12 @@
            voices.find(function(v){ return v.lang && v.lang.indexOf('en') === 0; });
   }
 
+  /** Estimates ms-per-character of speech at a given rate, used when real boundary events don't fire. */
+  function estimateMsPerChar(rate){
+    // ~15 characters/sec at rate 1.0 is a reasonable average for English speech.
+    return 66 / Math.max(rate, 0.3);
+  }
+
   /** Speaks a paragraph starting from the word at rangeIndex (0 = from the beginning), highlighting as it goes. */
   function speakFromIndex(paraEl, ranges, rangeIndex, rate, accentLang){
     currentRate = rate;
@@ -49,20 +55,57 @@
     if (voice) utter.voice = voice;
 
     var relevant = ranges.slice(rangeIndex);
+    var gotRealBoundary = false;
+    var fallbackTimers = [];
+
+    function clearFallback(){
+      fallbackTimers.forEach(function(t){ clearTimeout(t); });
+      fallbackTimers = [];
+    }
+
+    function highlightOnly(el){
+      ranges.forEach(function(r){ r.el.classList.remove('speaking'); });
+      if (el){
+        el.classList.add('speaking');
+        el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+
     utter.onboundary = function(e){
       if (e.name !== 'word') return;
+      gotRealBoundary = true;
+      clearFallback();
       var absoluteIndex = startChar + e.charIndex;
-      ranges.forEach(function(r){ r.el.classList.remove('speaking'); });
       var match = relevant.find(function(r){ return absoluteIndex >= r.start && absoluteIndex < r.end; });
-      if (match){
-        match.el.classList.add('speaking');
-        match.el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      }
+      highlightOnly(match ? match.el : null);
     };
+
+    utter.onstart = function(){
+      // If no real boundary event arrives shortly after speech starts, drive
+      // highlighting with an estimated per-word timer instead (Android Chrome
+      // frequently never fires 'boundary' at all).
+      setTimeout(function(){
+        if (gotRealBoundary) return;
+        var msPerChar = estimateMsPerChar(rate);
+        var elapsed = 0;
+        relevant.forEach(function(r){
+          var duration = Math.max(80, (r.end - r.start) * msPerChar);
+          var t = setTimeout(function(){
+            if (gotRealBoundary) return;
+            highlightOnly(r.el);
+          }, elapsed);
+          fallbackTimers.push(t);
+          elapsed += duration;
+        });
+      }, 250);
+    };
+
     utter.onend = function(){
+      clearFallback();
       ranges.forEach(function(r){ r.el.classList.remove('speaking'); });
       if (typeof window.ETHSpeech.onParagraphEnd === 'function') window.ETHSpeech.onParagraphEnd();
     };
+    utter.oncancel = function(){ clearFallback(); };
     window.speechSynthesis.speak(utter);
   }
 
@@ -82,56 +125,80 @@
   function resume(){ window.speechSynthesis.resume(); }
   function stop(){ window.speechSynthesis.cancel(); }
 
-  /** Read-along: listens to the student read a paragraph aloud and scores word accuracy. */
-  function startReadAlong(paraEl, onResult, onError, onEnd){
+  /** Read-along: listens continuously as the student reads, highlighting each word green in
+      real time as it's recognized (not waiting for the whole paragraph to finish), and
+      auto-stops once the paragraph is complete. Mirrors the Google Read Along experience. */
+  function startReadAlong(paraEl, onProgress, onError, onEnd){
     var Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!Ctor){
       onError('Speech recognition isn\'t supported in this browser. Try Chrome on Android.');
       return null;
     }
+    var wordEls = Array.prototype.slice.call(paraEl.querySelectorAll('.word'));
+    wordEls.forEach(function(el){ el.classList.remove('read-correct', 'read-incorrect', 'read-current'); });
+    var expected = wordEls.map(function(el){ return cleanWord(el.textContent); });
+
     var recognition = new Ctor();
     recognition.lang = 'en-IN';
-    recognition.continuous = false;
-    recognition.interimResults = false;
+    recognition.continuous = true;
+    recognition.interimResults = true;
     recognition.maxAlternatives = 1;
 
+    var matchedCount = 0;
+    var stoppedByUs = false;
+
+    function applyTranscript(transcript){
+      var recognizedWords = transcript.toLowerCase().split(/\s+/).filter(Boolean);
+      var ri = 0;
+      var newMatchedCount = 0;
+      expected.forEach(function(ew, i){
+        var matched = false;
+        for (var k = ri; k < Math.min(ri + 3, recognizedWords.length); k++){
+          var rw = recognizedWords[k];
+          if (rw === ew || rw.indexOf(ew) !== -1 || ew.indexOf(rw) !== -1){
+            matched = true; ri = k + 1; break;
+          }
+        }
+        if (matched){
+          wordEls[i].classList.remove('read-current');
+          wordEls[i].classList.add('read-correct');
+          newMatchedCount++;
+        }
+      });
+      matchedCount = Math.max(matchedCount, newMatchedCount);
+      // Point at the next unread word so the student can see where to continue.
+      wordEls.forEach(function(el){ el.classList.remove('read-current'); });
+      if (wordEls[matchedCount]) wordEls[matchedCount].classList.add('read-current');
+
+      onProgress({ correctCount: matchedCount, total: expected.length,
+        pct: expected.length ? matchedCount / expected.length : 0 });
+
+      if (expected.length && matchedCount / expected.length >= 0.95){
+        stoppedByUs = true;
+        recognition.stop();
+      }
+    }
+
     recognition.onresult = function(event){
-      var transcript = event.results[0][0].transcript.toLowerCase();
-      var result = scoreReading(paraEl, transcript);
-      onResult(result);
+      var transcript = '';
+      for (var i = 0; i < event.results.length; i++){
+        transcript += event.results[i][0].transcript + ' ';
+      }
+      applyTranscript(transcript);
     };
-    recognition.onerror = function(){
+    recognition.onerror = function(evt){
+      if (evt.error === 'no-speech' || evt.error === 'aborted') return;
       onError('Didn\'t catch that — tap the mic and try again.');
     };
-    recognition.onend = function(){ if (onEnd) onEnd(); };
+    recognition.onend = function(){
+      wordEls.forEach(function(el){ el.classList.remove('read-current'); });
+      var pct = expected.length ? matchedCount / expected.length : 0;
+      var stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : pct >= 0.5 ? 1 : 0;
+      if (onEnd) onEnd({ correctCount: matchedCount, total: expected.length, stars: stars, pct: pct });
+    };
+
     recognition.start();
     return recognition;
-  }
-
-  /** Compares recognized speech to the expected words in a paragraph and highlights them. */
-  function scoreReading(paraEl, transcript){
-    var wordEls = Array.prototype.slice.call(paraEl.querySelectorAll('.word'));
-    wordEls.forEach(function(el){ el.classList.remove('read-correct', 'read-incorrect'); });
-
-    var expected = wordEls.map(function(el){ return cleanWord(el.textContent); });
-    var recognizedWords = transcript.split(/\s+/).filter(Boolean);
-
-    var ri = 0, correctCount = 0;
-    expected.forEach(function(ew, i){
-      var matched = false;
-      for (var k = ri; k < Math.min(ri + 3, recognizedWords.length); k++){
-        var rw = recognizedWords[k];
-        if (rw === ew || rw.indexOf(ew) !== -1 || ew.indexOf(rw) !== -1){
-          matched = true; ri = k + 1; break;
-        }
-      }
-      wordEls[i].classList.add(matched ? 'read-correct' : 'read-incorrect');
-      if (matched) correctCount++;
-    });
-
-    var pct = expected.length ? correctCount / expected.length : 0;
-    var stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : pct >= 0.5 ? 1 : 0;
-    return { correctCount: correctCount, total: expected.length, stars: stars, pct: pct };
   }
 
   window.ETHSpeech = {

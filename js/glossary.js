@@ -30,19 +30,49 @@
   function showWordPopup(wordSpan){
     var key = window.ETHSpeech.cleanWord(wordSpan.textContent);
     var entry = glossary[key];
-    var enLine = '', taLine = '(meaning not added yet)';
     if (entry){
-      enLine = entry.en || '';
-      taLine = entry.ta || '(meaning not added yet)';
+      renderPopup(wordSpan.textContent.trim(), entry.en, entry.ta);
+      return;
     }
+    renderPopup(wordSpan.textContent.trim(), '', '\u2026', true);
+    lookupOnline(key).then(function(ta){
+      renderPopup(wordSpan.textContent.trim(), '', ta || '(meaning not available)');
+    });
+  }
+
+  function renderPopup(word, enLine, taLine, loading){
     popupEl.innerHTML =
       '<span class="close" data-close-popup="1">\u2715</span>' +
-      '<b>' + wordSpan.textContent.trim() + '</b>' +
+      '<b>' + word + '</b>' +
       (enLine ? '<br>' + enLine : '') +
-      '<span class="tamil">' + taLine + '</span>';
+      '<span class="tamil">' + taLine + '</span>' +
+      (loading ? '' : '');
     popupEl.style.display = 'block';
-    clearTimeout(showWordPopup._t);
-    showWordPopup._t = setTimeout(function(){ popupEl.style.display = 'none'; }, 4000);
+    clearTimeout(renderPopup._t);
+    renderPopup._t = setTimeout(function(){ popupEl.style.display = 'none'; }, 4500);
+  }
+
+  var dictCache = null;
+  function loadDictCache(){
+    if (dictCache) return dictCache;
+    try{ dictCache = JSON.parse(localStorage.getItem('eth_dict_cache') || '{}'); }
+    catch(e){ dictCache = {}; }
+    return dictCache;
+  }
+  function saveDictCache(){
+    try{ localStorage.setItem('eth_dict_cache', JSON.stringify(dictCache)); }catch(e){ /* ignore */ }
+  }
+
+  /** Looks up an English word's Tamil meaning via the free MyMemory API, caching results locally. */
+  function lookupOnline(word){
+    var cache = loadDictCache();
+    if (cache[word]) return Promise.resolve(cache[word]);
+    var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(word) + '&langpair=en|ta';
+    return fetch(url).then(function(r){ return r.json(); }).then(function(data){
+      var ta = data && data.responseData && data.responseData.translatedText;
+      if (ta){ cache[word] = ta; saveDictCache(); }
+      return ta;
+    }).catch(function(){ return null; });
   }
 
   function hidePopup(){ if (popupEl) popupEl.style.display = 'none'; }
