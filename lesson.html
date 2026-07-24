@@ -39,8 +39,6 @@
   </div>
 
   <div class="controls-row" style="margin-bottom:6px;">
-    <button class="ctrl-btn" id="btnPause">&#9199; Pause</button>
-    <button class="ctrl-btn" id="btnStop">&#9209; Stop</button>
     <button class="ctrl-btn" id="btnMeaningToggle">&#128214; Show Meanings: OFF</button>
     <button class="ctrl-btn" id="btnTranslateToggle">&#127470;&#127475; Tamil Translation: OFF</button>
     <button class="ctrl-btn" id="btnGlossaryPanel">&#128214; Glossary List</button>
@@ -62,7 +60,15 @@
   </div>
 
   <div id="paraContainer"></div>
+  <div style="height:76px;"></div>
 </main>
+
+<div class="bottom-toolbar" id="bottomToolbar">
+  <button class="bt-btn" id="bottomPlay" title="Play">&#9654;&#65039;</button>
+  <button class="bt-btn" id="bottomPause" title="Pause / Resume">&#9199;</button>
+  <button class="bt-btn" id="bottomStop" title="Stop">&#9209;</button>
+  <button class="bt-btn bt-mic" id="bottomMic" title="Read along" style="display:none;">&#127908;</button>
+</div>
 
 <div id="popupHost" class="word-popup" style="display:none;"></div>
 
