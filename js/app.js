@@ -118,7 +118,7 @@
           Object.keys(u.types).map(function(t){
             var entry = u.types[t];
             var isAvailable = entry.status === 'available';
-            var inner = '<div class="type-row' + (isAvailable ? '' : ' soon') + '">' +
+            var inner = '<div class="type-row' + (isAvailable ? '' : ' soon') + '" data-type="' + t + '">' +
               '<div><div class="tr-label">' + typeLabels[t] + '</div><div class="tr-title">' + entry.title + '</div></div>' +
               (isAvailable ? '<span class="btn btn-gold" style="pointer-events:none;">Open</span>' : '<span class="btn btn-outline" style="pointer-events:none;">Coming soon</span>') +
             '</div>';

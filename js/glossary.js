@@ -8,6 +8,7 @@
 
   var glossary = {};      // cleanedKey -> {word, en, ta}
   var translations = [];  // parallel to paragraphs
+  var paragraphsPlain = []; // paragraph text with {{blanks}} resolved, for example sentences
   var popupEl = null;
 
   function init(lessonData, popupHostEl){
@@ -24,32 +25,53 @@
       });
     }
     translations = lessonData.translations || [];
+    paragraphsPlain = (lessonData.paragraphs || []).map(function(p){
+      return p.replace(/\{\{([^}]+)\}\}/g, '$1');
+    });
     popupEl = popupHostEl;
+  }
+
+  /** Finds the sentence within a paragraph that actually contains the tapped word,
+      so the popup can show real context from the lesson instead of a generic example. */
+  function getExampleSentence(paraIdx, wordClean){
+    var text = paragraphsPlain[paraIdx];
+    if (!text) return '';
+    var sentences = text.match(/[^.!?]+[.!?]*/g) || [text];
+    var found = sentences.find(function(s){
+      var words = s.toLowerCase().split(/[^a-z']+/).filter(Boolean);
+      return words.indexOf(wordClean) !== -1;
+    });
+    return (found || sentences[0] || text).trim();
   }
 
   function showWordPopup(wordSpan){
     var key = window.ETHSpeech.cleanWord(wordSpan.textContent);
+    var paraEl = wordSpan.closest('.para-text');
+    var paraIdx = paraEl ? parseInt(paraEl.dataset.idx, 10) : -1;
+    var example = getExampleSentence(paraIdx, key);
+
     var entry = glossary[key];
     if (entry){
-      renderPopup(wordSpan.textContent.trim(), entry.en, entry.ta);
+      renderPopup(wordSpan.textContent.trim(), entry.en, entry.ta, example, 'Lesson glossary');
       return;
     }
-    renderPopup(wordSpan.textContent.trim(), '', '\u2026', true);
+    renderPopup(wordSpan.textContent.trim(), '', '\u2026', example, 'Looking up\u2026');
     lookupOnline(key).then(function(ta){
-      renderPopup(wordSpan.textContent.trim(), '', ta || '(meaning not available)');
+      renderPopup(wordSpan.textContent.trim(), '', ta || '(meaning not available)', example, ta ? 'Online dictionary' : '');
     });
   }
 
-  function renderPopup(word, enLine, taLine, loading){
+  function renderPopup(word, enLine, taLine, example, sourceTag){
     popupEl.innerHTML =
       '<span class="close" data-close-popup="1">\u2715</span>' +
       '<b>' + word + '</b>' +
       (enLine ? '<br>' + enLine : '') +
       '<span class="tamil">' + taLine + '</span>' +
-      (loading ? '' : '');
+      (example ? '<span class="example">\u201C' + example + '\u201D</span>' : '') +
+      (sourceTag ? '<span class="source-tag">' + sourceTag + '</span>' : '');
     popupEl.style.display = 'block';
     clearTimeout(renderPopup._t);
-    renderPopup._t = setTimeout(function(){ popupEl.style.display = 'none'; }, 4500);
+    renderPopup._t = setTimeout(function(){ popupEl.style.display = 'none'; }, 6000);
   }
 
   var dictCache = null;
@@ -63,14 +85,23 @@
     try{ localStorage.setItem('eth_dict_cache', JSON.stringify(dictCache)); }catch(e){ /* ignore */ }
   }
 
-  /** Looks up an English word's Tamil meaning via the free MyMemory API, caching results locally. */
+  /** Looks up an English word's Tamil meaning via the free MyMemory API, caching results locally.
+      Picks the highest-quality candidate from the match list rather than just the top guess,
+      which noticeably improves accuracy for short/ambiguous words. */
   function lookupOnline(word){
     var cache = loadDictCache();
     if (cache[word]) return Promise.resolve(cache[word]);
-    var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(word) + '&langpair=en|ta';
+    var url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(word) + '&langpair=en|ta&de=englishteachershubtheni@gmail.com';
     return fetch(url).then(function(r){ return r.json(); }).then(function(data){
-      var ta = data && data.responseData && data.responseData.translatedText;
-      if (ta){ cache[word] = ta; saveDictCache(); }
+      var best = null;
+      if (data && Array.isArray(data.matches) && data.matches.length){
+        best = data.matches.reduce(function(a, b){
+          return (parseFloat(b.match) || 0) > (parseFloat(a.match) || 0) ? b : a;
+        });
+      }
+      var ta = (best && best.translation) ||
+               (data && data.responseData && data.responseData.translatedText);
+      if (ta && !/^\s*$/.test(ta)){ cache[word] = ta; saveDictCache(); }
       return ta;
     }).catch(function(){ return null; });
   }

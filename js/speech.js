@@ -125,9 +125,12 @@
   function resume(){ window.speechSynthesis.resume(); }
   function stop(){ window.speechSynthesis.cancel(); }
 
-  /** Read-along: listens continuously as the student reads, highlighting each word green in
-      real time as it's recognized (not waiting for the whole paragraph to finish), and
-      auto-stops once the paragraph is complete. Mirrors the Google Read Along experience. */
+  /** Read-along: listens as the student reads, highlighting each word green once speech
+      recognition finalizes it. Only finalized results are used for matching (interim guesses
+      are shown only as a "listening" pulse) because interim text is unstable and caused visible
+      mismatches. Android Chrome often drops a "continuous" session after a short pause even
+      when the student is still reading, so this auto-restarts seamlessly unless the student
+      taps Stop or the paragraph is complete \u2014 that's what makes it feel continuous. */
   function startReadAlong(paraEl, onProgress, onError, onEnd){
     var Ctor = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!Ctor){
@@ -138,16 +141,12 @@
     wordEls.forEach(function(el){ el.classList.remove('read-correct', 'read-incorrect', 'read-current'); });
     var expected = wordEls.map(function(el){ return cleanWord(el.textContent); });
 
-    var recognition = new Ctor();
-    recognition.lang = 'en-IN';
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
-
+    var committedTranscript = '';
     var matchedCount = 0;
-    var stoppedByUs = false;
+    var manualStop = false;
+    var controller = { stop: function(){ manualStop = true; try{ recognition.stop(); }catch(e){} } };
 
-    function applyTranscript(transcript){
+    function applyTranscript(transcript, isInterimPreview){
       var recognizedWords = transcript.toLowerCase().split(/\s+/).filter(Boolean);
       var ri = 0;
       var newMatchedCount = 0;
@@ -165,40 +164,57 @@
           newMatchedCount++;
         }
       });
-      matchedCount = Math.max(matchedCount, newMatchedCount);
-      // Point at the next unread word so the student can see where to continue.
+      if (!isInterimPreview) matchedCount = Math.max(matchedCount, newMatchedCount);
       wordEls.forEach(function(el){ el.classList.remove('read-current'); });
       if (wordEls[matchedCount]) wordEls[matchedCount].classList.add('read-current');
 
       onProgress({ correctCount: matchedCount, total: expected.length,
         pct: expected.length ? matchedCount / expected.length : 0 });
 
-      if (expected.length && matchedCount / expected.length >= 0.95){
-        stoppedByUs = true;
-        recognition.stop();
+      if (expected.length && matchedCount / expected.length >= 0.9){
+        controller.stop();
       }
     }
 
+    var recognition = new Ctor();
+    recognition.lang = 'en-IN';
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 1;
+
     recognition.onresult = function(event){
-      var transcript = '';
-      for (var i = 0; i < event.results.length; i++){
-        transcript += event.results[i][0].transcript + ' ';
+      var newlyFinal = '';
+      var interim = '';
+      for (var i = event.resultIndex; i < event.results.length; i++){
+        var res = event.results[i];
+        if (res.isFinal) newlyFinal += res[0].transcript + ' ';
+        else interim += res[0].transcript + ' ';
       }
-      applyTranscript(transcript);
+      if (newlyFinal){
+        committedTranscript += newlyFinal;
+        applyTranscript(committedTranscript, false);
+      } else if (interim){
+        applyTranscript(committedTranscript + interim, true);
+      }
     };
     recognition.onerror = function(evt){
       if (evt.error === 'no-speech' || evt.error === 'aborted') return;
-      onError('Didn\'t catch that — tap the mic and try again.');
+      onError('Didn\'t catch that \u2014 tap the mic and try again.');
     };
     recognition.onend = function(){
-      wordEls.forEach(function(el){ el.classList.remove('read-current'); });
       var pct = expected.length ? matchedCount / expected.length : 0;
+      if (!manualStop && pct < 0.9){
+        // Android often ends the session early even while the student keeps reading.
+        // Restart silently so it feels like one continuous listening session.
+        try{ recognition.start(); return; }catch(e){ /* fall through to finish */ }
+      }
+      wordEls.forEach(function(el){ el.classList.remove('read-current'); });
       var stars = pct >= 0.9 ? 3 : pct >= 0.7 ? 2 : pct >= 0.5 ? 1 : 0;
       if (onEnd) onEnd({ correctCount: matchedCount, total: expected.length, stars: stars, pct: pct });
     };
 
     recognition.start();
-    return recognition;
+    return controller;
   }
 
   window.ETHSpeech = {
